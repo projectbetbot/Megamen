@@ -70,6 +70,8 @@
 	}
 
 
+
+
   // =========================
   // PROMO MODAL
   // =========================
@@ -135,52 +137,54 @@
 
 
 
-  // =========================
-  // GRID GALLERY
-  // =========================
-  function initGridGallery() {
-    const grid = document.getElementById("galleryGrid");
-    if (!grid) return;
+  	// =========================
+	// GRID GALLERY (Imgbb JSON)
+	// =========================
+	async function initGridGallery() {
+	  const grid = document.getElementById("galleryGrid");
+	  if (!grid) return;
+	  if (grid.dataset.ready === "1") return;
+	  grid.dataset.ready = "1";
+	
+	  try {
+		const res = await fetch("assets/gallery.json", { cache: "no-store" });
+		if (!res.ok) throw new Error("Failed to load gallery.json");
+	
+		const urls = await res.json();
+	
+		const frag = document.createDocumentFragment();
+	
+		urls.forEach((src, i) => {
+		  const tile = document.createElement("div");
+		  tile.className = "gallery-tile";
+	
+		  const img = document.createElement("img");
+		  img.loading = "lazy";
+		  img.decoding = "async";
+		  img.src = src;
+		  img.alt = `Gallery image ${i + 1}`;
+		  
+		  img.addEventListener("load", () => {
+		  // If gallery is collapsed, re-collapse to recompute peek height after images load
+		  const body = document.getElementById("galleryBody");
+		  if (body && body.classList.contains("is-collapsed")) {
+			// Trigger resize handler logic
+			window.dispatchEvent(new Event("resize"));
+		  }
+		}, { once: true });
 
-    if (grid.dataset.ready === "1") return;
-    grid.dataset.ready = "1";
+	
+		  tile.appendChild(img);
+		  frag.appendChild(tile);
+		});
+	
+		grid.innerHTML = "";
+		grid.appendChild(frag);
+	  } catch (err) {
+		console.error("Gallery failed:", err);
+	  }
+	}
 
-    const IMAGE_PATH = "images"; // beside index.html
-    const START = 0;
-    const END = 112;
-
-    // Try common extensions in order
-    const EXTS = ["jpg", "JPG", "jpeg", "png", "webp"];
-
-    const makeTile = (i) => {
-      const tile = document.createElement("div");
-      tile.className = "gallery-tile";
-
-      const img = document.createElement("img");
-      img.loading = "lazy";
-      img.alt = `Gallery image ${i}`;
-
-      let extIndex = 0;
-
-      const setSrc = () => {
-        img.src = `${IMAGE_PATH}/pic${i}.${EXTS[extIndex]}`;
-      };
-
-      img.addEventListener("error", () => {
-        extIndex += 1;
-        if (extIndex < EXTS.length) setSrc();
-        else tile.remove();
-      });
-
-      setSrc();
-      tile.appendChild(img);
-      return tile;
-    };
-
-    const frag = document.createDocumentFragment();
-    for (let i = START; i <= END; i++) frag.appendChild(makeTile(i));
-    grid.appendChild(frag);
-  }
 
  	// =========================
 	// EMAIL FORM → MAILTO (anti-spam)
@@ -327,7 +331,62 @@
 		else collapse();
 	  });
 	}
-
+	
+	// ===== EmailJS Integration - Promo Modal =====
+	(function () {
+	  const EMAILJS_PUBLIC_KEY = "IBUxc3JTi1wpJWXm5";
+	  const EMAILJS_SERVICE_ID = "service_qsy8q7j";
+	  const EMAILJS_TEMPLATE_ID = "template_27uy9vo";
+	
+	  if (!window.emailjs) return;
+	
+	  emailjs.init(EMAILJS_PUBLIC_KEY);
+	
+	  const form = document.getElementById("promoForm");
+	  if (!form) return;
+	
+	  form.addEventListener("submit", async (e) => {
+		e.preventDefault();
+	
+		// Honeypot protection
+		const hp = form.querySelector('input[name="company"]');
+		if (hp && hp.value.trim().length > 0) {
+		  return;
+		}
+	
+		const submitBtn = form.querySelector('button[type="submit"]');
+		submitBtn.disabled = true;
+		submitBtn.textContent = "Sending...";
+	
+		const payload = {
+		  name: form.elements["name"].value,
+		  email: form.elements["email"].value,
+		  ref: form.elements["ref"].value,
+		  need_quote: form.elements["need_quote"].checked ? "Yes" : "No",
+		  message: form.elements["message"].value,
+		  page: window.location.href,
+		  submitted_at: new Date().toLocaleString()
+		};
+	
+		try {
+		  await emailjs.send(
+			EMAILJS_SERVICE_ID,
+			EMAILJS_TEMPLATE_ID,
+			payload
+		  );
+	
+		  form.reset();
+		  alert("Submitted successfully. We’ll follow up shortly.");
+	
+		} catch (error) {
+		  console.error("EmailJS Error:", error);
+		  alert("Submission failed. Please try again.");
+		}
+	
+		submitBtn.disabled = false;
+		submitBtn.textContent = "Submit";
+	  });
+	})();
 
 
   // =========================
