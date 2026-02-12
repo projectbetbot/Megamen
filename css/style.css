@@ -369,6 +369,34 @@ img{ max-width:100%; display:block; }
   background-size: cover;
 }
 
+/* Default (desktop): looks cinematic, may crop a little */
+.services-posters .service-poster{
+  background-size: cover;
+  background-position: center;
+  
+  aspect-ratio: 16 / 9;   /* change if your poster is more like 3/2 or 4/3 */
+  min-height: auto;       /* let aspect-ratio control it */
+}
+
+/* ✅ After 980px (tablet/phone): show full poster, no cropping */
+@media (max-width: 980px){
+  .services-posters .service-poster{
+    background-size: contain;      /* no crop */
+    background-position: center;
+    background-color: rgba(0,0,0,.35); /* helps “letterbox” edges */
+    min-height: 220px;             /* a bit smaller */
+  }
+}
+
+/* ✅ Even smaller phones: shrink more */
+@media (max-width: 520px){
+  .services-posters .service-poster{
+    min-height: 180px;
+    border-radius: 14px;
+  }
+}
+
+
 @media (max-width: 980px){
   .services-posters .service-poster{ grid-column: span 12; }
 }
