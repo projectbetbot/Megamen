@@ -68,7 +68,58 @@
 	
 	  onScroll();
 	}
-
+	
+	// =========================
+	// SHINE ON FIRST VIEW (IntersectionObserver)
+	// =========================
+	function initShineOnFirstView() {
+	  const prefersReduced =
+		window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+	  if (prefersReduced) return;
+	
+	  // Target your “section cards”
+	  const targets = document.querySelectorAll(
+		".service-poster, .gallery-tile, .cap-card, .contact-inquiry, .modal-card"
+	  );
+	
+	  if (!targets.length) return;
+	
+	  // Add base class
+	  targets.forEach((el) => el.classList.add("shine-once"));
+	
+	  // Observe first-time visibility
+	  const io = new IntersectionObserver(
+		(entries, obs) => {
+		  entries.forEach((entry) => {
+			if (!entry.isIntersecting) return;
+	
+			const el = entry.target;
+	
+			// Trigger shine once
+			el.classList.add("is-visible");
+	
+			// Clean up after animation ends (optional)
+			el.addEventListener(
+			  "animationend",
+			  () => {
+				// Remove is-visible so hover shine can still work independently
+				el.classList.remove("is-visible");
+			  },
+			  { once: true }
+			);
+	
+			// Never do it again
+			obs.unobserve(el);
+		  });
+		},
+		{
+		  threshold: 0.18,          // % visible before triggering
+		  rootMargin: "0px 0px -10% 0px", // triggers a bit before fully centered
+		}
+	  );
+	
+	  targets.forEach((el) => io.observe(el));
+	}
 
 
 
@@ -399,6 +450,7 @@
     initGridGallery();
 	initGalleryCollapse();
     initEmailForm();
+	initShineOnFirstView();
   }
 
   if (document.readyState === "loading") {
