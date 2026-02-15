@@ -26,14 +26,78 @@
 
 html, body{ height:100%; }
 
+/* =========================
+   GLOBAL BACKGROUND (HEX + SMOKE)
+   ========================= */
+
 body{
   font-family:"Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   color:var(--text);
   line-height:1.6;
   overflow-x:hidden;
 
+  position:relative;
+  isolation:isolate;
   background:#000;
 }
+
+/* Hex texture layer */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+
+  background:
+    url("../assets/BGIMG.jpg") center / cover no-repeat;
+
+  opacity:0.30;
+  /*filter: none;*/
+  filter:contrast(1.05) brightness(.85);
+  pointer-events:none;
+}
+
+/* Smoky dynamic gradient layer */
+body::after{
+  content:"";
+  position:fixed;
+  inset:-20%;
+  z-index:-1;
+  pointer-events:none;
+
+  background:
+    radial-gradient(closest-side at 20% 30%, rgba(0,0,0,.12) 0%, rgba(0,0,0,.9) 60%, #000 100%),
+    radial-gradient(closest-side at 80% 25%, rgba(0,0,0,.14) 0%, rgba(0,0,0,.92) 62%, #000 100%),
+    radial-gradient(closest-side at 65% 80%, rgba(0,0,0,.12) 0%, rgba(0,0,0,.92) 62%, #000 100%),
+    radial-gradient(closest-side at 25% 85%, rgba(0,0,0,.16) 0%, rgba(0,0,0,.94) 64%, #000 100%);
+
+  filter:blur(28px);
+  opacity:.95;
+  mix-blend-mode:multiply;
+
+  animation:smokeDrift 18s ease-in-out infinite alternate;
+  transform:translate3d(0,0,0);
+}
+
+@keyframes smokeDrift{
+  0%{
+    transform:translate3d(-2%, -1%, 0) scale(1);
+    filter:blur(24px);
+  }
+  50%{
+    transform:translate3d(2%, 1%, 0) scale(1.03);
+    filter:blur(30px);
+  }
+  100%{
+    transform:translate3d(-1%, 2%, 0) scale(1.06);
+    filter:blur(28px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  body::after{ animation:none; }
+}
+
 
 /* =========================
    PERMANENT HEADER
@@ -68,26 +132,9 @@ body{
    CONTENT BACKDROP
    ========================= */
 .content-backdrop{
-  position:relative;
-  background:
-    linear-gradient(
-      rgba(0,0,0,.9),
-      rgba(0,0,0,.96)
-    ),
-    url("assets/megamenbgimage.jpg") center top / cover no-repeat;
+  background:none;
 }
 
-/* Optional: subtle parallax feel */
-@media (min-width: 900px){
-  .content-backdrop{
-    background-attachment: fixed;
-  }
-}
-@media (max-width: 700px){
-  .content-backdrop{
-    background-attachment: scroll;
-  }
-}
 
 
 img{ max-width:100%; display:block; }
