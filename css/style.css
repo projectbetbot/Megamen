@@ -2,6 +2,9 @@
   --bg:#000;
   --bg-alt:#000;
 
+  --shine-speed: 2.8s;
+  --shine-alpha: .16; /* intensity */
+
   --text:#f7f9ff;
   --muted:#9aa0b2;
 
@@ -25,6 +28,187 @@
 }
 
 html, body{ height:100%; }
+
+/* =========================
+   SHINE EFFECT (cards + links)
+   ========================= */
+
+/* Base helper: anything with .shine gets the sweep */
+.shine{
+  position:relative;
+  overflow:hidden;
+  transform: translateZ(0);
+}
+
+/* the moving highlight */
+.shine::after{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background: linear-gradient(
+    115deg,
+    rgba(255,255,255,0) 35%,
+    rgba(255,255,255,var(--shine-alpha)) 50%,
+    rgba(255,255,255,0) 65%
+  );
+  transform: translateX(-120%) rotate(12deg);
+  pointer-events:none;
+  opacity:0;
+}
+
+/* run shine on hover/focus (default) */
+.shine:hover::after,
+.shine:focus-within::after{
+  opacity:1;
+  animation: shineSweep var(--shine-speed) ease-in-out 1;
+}
+
+/* smoother, always-on slow shine option */
+.shine.shine-auto::after{
+  opacity:1;
+  animation: shineSweep var(--shine-speed) ease-in-out infinite;
+}
+
+/* keyframes */
+@keyframes shineSweep{
+  0%   { transform: translateX(-120%) rotate(12deg); }
+  60%  { transform: translateX(120%)  rotate(12deg); }
+  100% { transform: translateX(120%)  rotate(12deg); }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .shine::after{ animation:none !important; }
+}
+
+/* Cards / tiles / posters */
+.service-poster,
+.gallery-tile,
+.contact-inquiry,
+.modal-card{
+  position:relative;
+  overflow:hidden;
+}
+
+/* Make them shine */
+.service-poster::after,
+.gallery-tile::after,
+.contact-inquiry::after,
+.modal-card::after{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background: linear-gradient(
+    115deg,
+    rgba(255,255,255,0) 35%,
+    rgba(255,255,255,var(--shine-alpha)) 50%,
+    rgba(255,255,255,0) 65%
+  );
+  transform: translateX(-120%) rotate(12deg);
+  pointer-events:none;
+  opacity:0;
+}
+
+/* Shine on hover */
+.service-poster:hover::after,
+.gallery-tile:hover::after,
+.contact-inquiry:hover::after,
+.modal-card:hover::after{
+  opacity:1;
+  animation: shineSweep var(--shine-speed) ease-in-out 1;
+}
+
+/* One-time shine when card becomes visible */
+.shine-once{
+  position:relative;
+  overflow:hidden;
+  transform: translateZ(0);
+}
+
+.shine-once::after{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background: linear-gradient(
+    115deg,
+    rgba(255,255,255,0) 35%,
+    rgba(255,255,255,var(--shine-alpha,.16)) 50%,
+    rgba(255,255,255,0) 65%
+  );
+  transform: translateX(-120%) rotate(12deg);
+  pointer-events:none;
+  opacity:0;
+}
+
+/* This class gets added by JS on first viewport entry */
+.shine-once.is-visible::after{
+  opacity:1;
+  animation: shineSweep var(--shine-speed, 2.8s) ease-in-out 1;
+}
+
+/* Reuse your existing keyframes if you already added them */
+@keyframes shineSweep{
+  0%   { transform: translateX(-120%) rotate(12deg); }
+  60%  { transform: translateX(120%)  rotate(12deg); }
+  100% { transform: translateX(120%)  rotate(12deg); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .shine-once.is-visible::after{ animation:none; opacity:0; }
+}
+
+
+/* =========================
+   SHINE TEXT (btn-link + links)
+   ========================= */
+.btn-link,
+a.btn-link{
+  position:relative;
+  display:inline-block;
+  background: linear-gradient(
+    90deg,
+    var(--accent) 0%,
+    #ffd2b2 20%,
+    var(--accent) 40%,
+    var(--accent) 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* only animate on hover/focus */
+.btn-link:hover,
+.btn-link:focus-visible{
+  animation: textShine 1.25s ease-in-out 1;
+}
+
+@keyframes textShine{
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .btn-link:hover,
+  .btn-link:focus-visible{
+    animation:none;
+  }
+}
+
+/*
+Special Shine Glow Bump
+*/
+.service-poster:hover,
+.gallery-tile:hover,
+.contact-inquiry:hover{
+  box-shadow: 0 18px 45px rgba(0,0,0,.45), 0 0 0 1px rgba(255,107,0,.18);
+}
+
+.btn-link:hover{
+  text-shadow: 0 0 14px rgba(255,107,0,.22);
+}
+
 
 /* =========================
    GLOBAL BACKGROUND (HEX + SMOKE)
