@@ -233,7 +233,7 @@ body::before{
   z-index:-2;
 
   background:
-    url("../assets/BGIMG.jpg") center / cover no-repeat;
+    url("../assets/BGIMG.png") center / cover no-repeat;
 
   opacity:0.30;
   /*filter: none;*/
