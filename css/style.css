@@ -157,6 +157,43 @@ html, body{ height:100%; }
   .shine-once.is-visible::after{ animation:none; opacity:0; }
 }
 
+/* =========================
+   LOGO SHINE (SVG MASKED)
+   ========================= */
+.hero-logo-svg{
+  display:inline-block;
+  width: clamp(480px, 42vw, 960px); /* keep your sizing */
+}
+
+.logo-svg{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+/* Make it feel like light, not paint */
+.logo-shine-group{
+  mix-blend-mode: screen;
+  opacity: .95;
+}
+
+.logo-shine-rect{
+  transform: skewX(-20deg);
+  animation: logoSvgShine 3s ease-in-out infinite;
+}
+
+@keyframes logoSvgShine{
+  0%   { transform: translateX(0)   skewX(-20deg); opacity:0; }
+  12%  { opacity:1; }
+  40%  { transform: translateX(220px) skewX(-20deg); opacity:0; }
+  100% { transform: translateX(220px) skewX(-20deg); opacity:0; }
+}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .logo-shine-rect{ animation:none; opacity:0; }
+}
+
 
 /* =========================
    SHINE TEXT (btn-link + links)
