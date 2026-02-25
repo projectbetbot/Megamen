@@ -459,7 +459,7 @@ img{ max-width:100%; display:block; }
 .hero-logo{ margin-bottom:16px; }
 
 .hero-logo img{
-  width: clamp(280px, 42vw, 960px);
+  width: clamp(480px, 42vw, 960px);
   height: auto;
   margin: 0 auto;
 }
@@ -477,6 +477,7 @@ img{ max-width:100%; display:block; }
   flex-wrap:wrap;
   justify-content:center;
 }
+
 
 /* =========================
    HEADER TEXT CTAs
