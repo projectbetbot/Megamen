@@ -209,6 +209,88 @@ Special Shine Glow Bump
   text-shadow: 0 0 14px rgba(255,107,0,.22);
 }
 
+/* =========================
+   SERVICE POSTER MODAL
+   ========================= */
+
+.service-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 4000;
+}
+
+.service-modal.open {
+  display: flex;
+}
+
+.service-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.75);
+  backdrop-filter: blur(6px);
+}
+
+.service-modal-card {
+  position: relative;
+  width: min(680px, 92vw);
+  background: rgba(0,0,0,.92);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 18px;
+  padding: 28px;
+  z-index: 1;
+  animation: servicePop .25s ease forwards;
+  box-shadow: 0 25px 70px rgba(0,0,0,.6);
+}
+
+@keyframes servicePop {
+  from { transform: translateY(12px) scale(.96); opacity:0; }
+  to { transform: translateY(0) scale(1); opacity:1; }
+}
+
+.service-modal-content h2 {
+  margin-bottom: 14px;
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+
+.service-modal-content ul {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  padding: 0;
+}
+
+.service-modal-content li {
+  position: relative;
+  padding-left: 18px;
+  font-size: .95rem;
+  color: rgba(247,249,255,.85);
+}
+
+.service-modal-content li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .5em;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.service-modal-close {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
 
 /* =========================
    GLOBAL BACKGROUND (HEX + SMOKE)
