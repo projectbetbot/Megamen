@@ -15,6 +15,73 @@
   <title>Megamen Network &amp; Security</title>
 
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+/* =========================
+   HERO LOGO SHINE
+   ========================= */
+
+.hero-logo{
+  position:relative;
+  display:inline-block;
+}
+
+.hero-logo img{
+  display:block;
+  position:relative;
+  z-index:1;
+}
+
+/* Shine overlay */
+.hero-logo::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+
+  background:linear-gradient(
+    110deg,
+    rgba(255,255,255,0) 35%,
+    rgba(255,255,255,.25) 48%,
+    rgba(255,255,255,.9) 50%,
+    rgba(255,255,255,.25) 52%,
+    rgba(255,255,255,0) 65%
+  );
+
+  background-size:220% 100%;
+  background-position:-120% 0;
+
+  /* IMPORTANT: path now relative to HTML */
+  /*-webkit-mask-image:url("assets/megamen-logo.png");*/
+  -webkit-mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  -webkit-mask-size:100% 100%;
+
+  /*mask-image:url("assets/megamen-logo.png");*/
+  mask-repeat:no-repeat;
+  mask-position:center;
+  mask-size:100% 100%;
+
+  mix-blend-mode:screen;
+
+  animation:logoShineSweep 3s ease-in-out infinite;
+}
+
+@keyframes logoShineSweep{
+  0%   { background-position:-120% 0; opacity:0; }
+  12%  { opacity:1; }
+  38%  { background-position:120% 0; opacity:0; }
+  100% { background-position:120% 0; opacity:0; }
+}
+
+/* accessibility */
+@media (prefers-reduced-motion:reduce){
+  .hero-logo::after{
+    animation:none;
+    opacity:0;
+  }
+}
+</style>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
@@ -45,7 +112,7 @@
 
     <div class="hero-content">
       <div class="hero-logo">
-        <img src="assets/megamen-logo.png" alt="Megamen Network &amp; Security" />
+  		<img class="hero-logo-img" src="assets/megamen-logo.png" alt="Megamen Network &amp; Security" />
       </div>
     </div>
 
