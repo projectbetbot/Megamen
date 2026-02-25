@@ -70,6 +70,65 @@
 	}
 	
 	// =========================
+	// SERVICE POSTER POPUP
+	// =========================
+	function initServicePosterPopup() {
+	  const posters = document.querySelectorAll(".service-poster");
+	  if (!posters.length) return;
+	
+	  // Create modal dynamically
+	  const modal = document.createElement("div");
+	  modal.className = "service-modal";
+	  modal.innerHTML = `
+		<div class="service-modal-backdrop"></div>
+		<div class="service-modal-card">
+		  <button class="service-modal-close" aria-label="Close">✕</button>
+		  <div class="service-modal-content"></div>
+		</div>
+	  `;
+	  document.body.appendChild(modal);
+	
+	  const content = modal.querySelector(".service-modal-content");
+	  const closeBtn = modal.querySelector(".service-modal-close");
+	
+	  const openModal = (poster) => {
+		const title = poster.querySelector("h3")?.textContent || "";
+		const list = poster.querySelector("ul")?.innerHTML || "";
+	
+		content.innerHTML = `
+		  <h2>${title}</h2>
+		  <ul>${list}</ul>
+		`;
+	
+		modal.classList.add("open");
+		document.body.style.overflow = "hidden";
+	  };
+	
+	  const closeModal = () => {
+		modal.classList.remove("open");
+		document.body.style.overflow = "";
+	  };
+	
+	  posters.forEach(poster => {
+		poster.addEventListener("click", () => {
+		  if (modal.classList.contains("open")) {
+			closeModal();
+		  } else {
+			openModal(poster);
+		  }
+		});
+	  });
+	
+	  closeBtn.addEventListener("click", closeModal);
+	  modal.querySelector(".service-modal-backdrop")
+		   .addEventListener("click", closeModal);
+	
+	  document.addEventListener("keydown", (e) => {
+		if (e.key === "Escape") closeModal();
+	  });
+	}
+	
+	// =========================
 	// SHINE ON FIRST VIEW (IntersectionObserver)
 	// =========================
 	function initShineOnFirstView() {
@@ -447,6 +506,7 @@
     initBrandBar();
 	initHeaderScrollCollapse();
     initPromoModal();
+	initServicePosterPopup();
     initGridGallery();
 	initGalleryCollapse();
     initEmailForm();
