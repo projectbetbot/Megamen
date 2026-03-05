@@ -189,6 +189,11 @@ html, body{ height:100%; }
   .logo-shine-rect{ animation:none; opacity:0; }
 }
 
+@media (max-width: 520px){
+  .hero-logo-svg{
+    width: clamp(240px, 78vw, 340px);
+  }
+}
 
 /* =========================
    SHINE TEXT (btn-link + links)
@@ -1397,9 +1402,7 @@ img{ max-width:100%; display:block; }
    ========================= */
 .services-posters .service-poster{
   grid-column: span 2;
-  min-height: 640px;
-  max-height: 1080px;
-  
+  height: 580px;
   overflow:hidden;
 
   background-repeat:no-repeat;
