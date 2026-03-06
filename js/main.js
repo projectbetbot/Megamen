@@ -148,6 +148,7 @@ function initIndustriesPanel() {
 	 function initPromoModal() {
 	  const modal = $("#promoModal");
 	  const closeBtn = $("#promoClose");
+	  const closeLink = $("#promoCloseLink");
 	  const promoForm = $("#promoForm");
 	
 	  // Add BOTH open buttons (header + contact)
@@ -188,7 +189,9 @@ function initIndustriesPanel() {
 	  }
 	
 	  on(closeBtn, "click", close);
-	
+	  
+	  on(closeLink, "click", close);
+	  
 	  on(modal, "click", (e) => {
 		if (e.target === modal) close();
 	  });
