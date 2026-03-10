@@ -143,72 +143,93 @@ function initIndustriesPanel() {
 
 
   // =========================
-  // PROMO MODAL
+// PROMO MODAL
+// =========================
+function initPromoModal() {
+  const modal = document.getElementById("quoteModal");
+  const closeBtn = document.getElementById("promoClose");
+  const closeLink = document.getElementById("promoCloseLink");
+
+  const openBtns = [
+    document.getElementById("openQuote"),
+    document.getElementById("openQuoteContact"),
+  ].filter(Boolean);
+
+  if (!modal) return;
+
+  const KEY = "megamen_promo_closed_v1";
+  const OPEN_DELAY_MS = 10000;
+
+  const isOpen = () => modal.classList.contains("is-open");
+
+  const open = () => {
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+  };
+
+  const close = () => {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+    sessionStorage.setItem(KEY, "1");
+  };
+
   // =========================
-	 function initPromoModal() {
-	  const modal = $("#promoModal");
-	  const closeBtn = $("#promoClose");
-	  const closeLink = $("#promoCloseLink");
-	  const promoForm = $("#promoForm");
-	
-	  // Add BOTH open buttons (header + contact)
-	  const openBtns = [
-		document.getElementById("openQuote"),
-		document.getElementById("openQuoteContact"),
-	  ].filter(Boolean);
-	
-	  if (!modal) return;
-	
-	  const KEY = "megamen_promo_closed_v1";
-	  const OPEN_DELAY_MS = 10_000;
-	
-	  const open = () => {
-		modal.classList.add("open");
-		modal.setAttribute("aria-hidden", "false");
-	  };
-	
-	  const close = () => {
-		modal.classList.remove("open");
-		modal.setAttribute("aria-hidden", "true");
-		sessionStorage.setItem(KEY, "1");
-	  };
-	
-	  // Manual open buttons
-	  openBtns.forEach((btn) => {
-		if (btn.dataset.bound === "1") return;
-		btn.dataset.bound = "1";
-		btn.addEventListener("click", open);
-	  });
-	
-	  // Auto open (session-based)
-	  if (!sessionStorage.getItem(KEY)) {
-		window.setTimeout(() => {
-		  if (!document.body.contains(modal)) return;
-		  open();
-		}, OPEN_DELAY_MS);
-	  }
-	
-	  on(closeBtn, "click", close);
-	  
-	  on(closeLink, "click", close);
-	  
-	  on(modal, "click", (e) => {
-		if (e.target === modal) close();
-	  });
-	
-	  on(window, "keydown", (e) => {
-		if (e.key === "Escape" && modal.classList.contains("open")) close();
-	  });
-	
-	  on(promoForm, "submit", (e) => {
-		e.preventDefault();
-		close();
-		alert("Thanks! We’ll reach out soon.");
-		promoForm.reset();
-	  });
-	}
+  // OPEN BUTTONS
+  // =========================
+  openBtns.forEach((btn) => {
+    if (btn.dataset.bound === "1") return;
+    btn.dataset.bound = "1";
 
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      open();
+    });
+  });
 
+  // =========================
+  // AUTO OPEN (SESSION BASED)
+  // =========================
+  if (!sessionStorage.getItem(KEY)) {
+    window.setTimeout(() => {
+      if (!document.body.contains(modal)) return;
+      if (isOpen()) return;
+      open();
+    }, OPEN_DELAY_MS);
+  }
+
+  // =========================
+  // CLOSE BUTTON
+  // =========================
+  on(closeBtn, "click", (e) => {
+    e.preventDefault();
+    close();
+  });
+
+  on(closeLink, "click", (e) => {
+    e.preventDefault();
+    close();
+  });
+
+  // =========================
+  // CLICK OUTSIDE MODAL
+  // =========================
+  on(modal, "click", (e) => {
+    if (e.target === modal) {
+      close();
+    }
+  });
+
+  // =========================
+  // ESC KEY CLOSE
+  // =========================
+  on(window, "keydown", (e) => {
+    if (e.key === "Escape" && isOpen()) {
+      close();
+    }
+  });
+}
 
   	// =========================
 	// GRID GALLERY (Imgbb JSON)
@@ -256,45 +277,6 @@ function initIndustriesPanel() {
 	  } catch (err) {
 		console.error("Gallery failed:", err);
 	  }
-	}
-
-
- 	// =========================
-	// EMAIL FORM → MAILTO (anti-spam)
-	// =========================
-	const formLoadedAt = Date.now();
-	
-	function initEmailForm() {
-	  const form = $("#emailForm");
-	  const emailInput = $("#emailInput");
-	  const hp = document.getElementById("company"); // honeypot (optional)
-	  if (!form || !emailInput) return;
-	
-	  on(form, "submit", (e) => {
-		e.preventDefault();
-	
-		// 1) Honeypot
-		if (hp && hp.value.trim() !== "") return;
-	
-		// 2) Time trap
-		if (Date.now() - formLoadedAt < 2000) return;
-	
-		// 3) Cooldown
-		const last = Number(localStorage.getItem("signup_last") || "0");
-		if (Date.now() - last < 30000) return;
-		localStorage.setItem("signup_last", String(Date.now()));
-	
-		const userEmail = emailInput.value.trim();
-		if (!userEmail) return;
-	
-		const subject = encodeURIComponent("[WEBSITE] Mailing List Signup");
-		const body = encodeURIComponent(
-		  `Please add this email to the mailing list:\n\n${userEmail}`
-		);
-	
-		window.location.href = `mailto:security@megamen.ca?subject=${subject}&body=${body}`;
-		form.reset();
-	  });
 	}
 
 	// =========================
@@ -471,7 +453,6 @@ function initIndustriesPanel() {
     initPromoModal();
     initGridGallery();
 	initGalleryCollapse();
-    initEmailForm();
 	initShineOnFirstView();
 	initIndustriesPanel();
   }
