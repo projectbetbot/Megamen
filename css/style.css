@@ -478,10 +478,10 @@ img{ max-width:100%; display:block; }
   margin:0 auto;
   text-align:center;
   padding-top:24px;
-  padding-bottom:18px;
+  padding-bottom:none;
 }
 
-.hero-logo{ margin-bottom:16px; }
+.hero-logo{ margin-bottom:none; }
 
 .hero-logo img{
   width: clamp(480px, 42vw, 960px);
@@ -559,6 +559,7 @@ img{ max-width:100%; display:block; }
     rgba(255,107,0,.55),
     rgba(255,138,42,.45)
   );
+  margin-bottom: 2rem;
 }
 
 .stats-wrap{
@@ -575,6 +576,11 @@ img{ max-width:100%; display:block; }
   text-align:center;
   padding:0;          /* no boxes */
   background:none;    /* remove squares */
+}
+
+.stat-box h3{
+    font-size:3rem;
+    margin-bottom:8px;
 }
 
 .stat-num{
@@ -988,7 +994,7 @@ img{ max-width:100%; display:block; }
   place-items: center;
 
   padding: 1rem;
-  background: rgba(0, 0, 0, 0.72);
+  background:#2a2d31;
 
   opacity: 0;
   visibility: hidden;
@@ -1050,6 +1056,12 @@ img{ max-width:100%; display:block; }
 
 /* SCROLLABLE CONTENT */
 .modal-body {
+	background:#2a2d31;
+	border:3px solid rgba(255,122,0,.25);
+    box-shadow:
+        0 10px 35px rgba(0,0,0,.45),
+        0 0 18px rgba(255,122,0,.08);
+
   max-height: min(90dvh, 100%);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -1396,6 +1408,15 @@ font-size: 0.6em;
 
 @media (max-width: 768px) {
 
+.service-poster {
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.service-poster:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 40px rgba(0,0,0,.35);
+}
+
 .services-grid {
   display: grid;
   grid-template-columns: 1fr;   /* always vertical */
@@ -1403,6 +1424,15 @@ font-size: 0.6em;
   width: 100%;
 }
 
+.infrastructure h2{
+    font-size:3.2rem;
+    font-weight:800;
+    letter-spacing:1px;
+    text-align:center;
+    color:#ff7a00;
+    line-height:1.05;
+    margin-bottom:20px;
+}
 .service-poster {
   width: 100%;
   aspect-ratio: 16 / 9;   /* adjust to your image ratio */
@@ -1455,4 +1485,64 @@ font-size: 0.6em;
     height: 36px;
   }
   .service-media{ height:120px; }
+}
+@media (max-width: 413px){
+	.hero{
+		min-height: 28vh;
+		justify-content:space-around;
+	}
+	
+	.hero-content{
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+}
+	.logo-svg{
+    	width:100%;
+    	max-width:310px;
+    	height:auto;
+    	display:block;
+    	margin: 1rem auto;
+	}
+	
+	.infrastructure h2{
+        font-size:2.7rem;
+    }
+}
+
+@media (max-width: 413px){
+
+    section{
+        padding:40px 16px;
+    }
+
+    .hero,
+    .infrastructure,
+    .stats{
+        gap:18px;
+    }
+
+    h1{
+        font-size:2rem;
+        line-height:1.1;
+    }
+
+    h2{
+        font-size:2.2rem;
+        line-height:1.4;
+    }
+	
+
+    p{
+        font-size:0.95rem;
+        line-height:1.5;
+    }
+
+    .industries-list{
+        gap:8px;
+    }
+
+    .stat-box{
+        padding:18px 12px;
+    }
 }
